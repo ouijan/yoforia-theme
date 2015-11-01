@@ -74,10 +74,14 @@ switch ($woocommerce_loop['columns']) {
 		echo '</a>';
 	?>
 
-	<figcaption class="clearfix">
-		<?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
-		<a title="Quick Look" class="quickview-button" data-id="<?php echo get_the_ID(); ?>"><i class="fa fa-eye"></i></a>
-	</figcaption>
+	<?php
+	/* 
+	 * 	<figcaption class="clearfix">
+	 *	 	<?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
+	 *	 	<a title="Quick Look" class="quickview-button" data-id="<?php echo get_the_ID(); ?>"><i class="fa fa-eye"></i></a>
+	 *  </figcaption>
+	 */
+	?>
 
 	</figure>
 
