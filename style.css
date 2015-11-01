@@ -8,3 +8,7 @@ Template: liesel
 */
 @import url("../liesel/includes/css/layout.css");
 @import url("../liesel/includes/css/public/grand.css");
+
+.showhide-toggle {
+	display: none;
+}
