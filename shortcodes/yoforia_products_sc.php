@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Handle Shortcode Generation
+ * @param  [type] $atts    [description]
+ * @param  [type] $content [description]
+ * @return [type]          [description]
+ */
 function yoforia_products_sc ($atts, $content = null) {
     global $woocommerce, $woocommerce_loop, $wpdb;
     if (empty($atts)) return;
@@ -320,6 +326,10 @@ function yoforia_products_sc ($atts, $content = null) {
     return $product_list_output;
 }
 
+/**
+ * Handle Carousel Javascript
+ * @return [type] [description]
+ */
 function yoforia_enqueue_carousel_products_sc() {
     global $post;
     if ( has_shortcode( $post->post_content, 'yoforia_products_sc' ) || 
@@ -329,5 +339,100 @@ function yoforia_enqueue_carousel_products_sc() {
     }
 }
 
+/**
+ * Register Shortcode with Visual Composer
+ * @param  [type] $shortcodes [description]
+ * @return [type]             [description]
+ */
+function yoforia_add_vc_shortcodes( $shortcodes ) {
+    if (!function_exists('vc_map')) return;
+    vc_map(array(
+        'name' => 'Yoforia Products',
+        'icon' => 'icon-df_shop-product',
+        'base' => 'yoforia_products_sc',
+        'category' => 'Content',
+        'description' => 'Display a grid of woocommerce products',
+        'params' => array(
+            array(
+                "type" => "dropdown",
+                "holder" => "div",
+                "class" => "",
+                "heading" => "Column Width",
+                "param_name" => "widths",
+                "value" => array(
+                    "Select" => "",
+                    "1\/1" => "1\/1",
+                    "2\/3" => "2\/3",
+                    "1\/2" => "1\/2",
+                    "1\/4" => "1\/4",
+                ),
+                "description" => "This Column it must be the same with row column you create",
+            ),
+            array(
+                "type" => "dropdown",
+                "holder" => "div",
+                "class" => "",
+                "heading" => "Product Type",
+                "param_name" => "product_type",
+                "value" => array(
+                    "Select" => "",
+                    "Best Sellers" => "best-sellers",
+                    "Latest Products" => "latest-products",
+                    "Product Category" => "product-category",
+                    "Top Rated" => "top-rated",
+                    "Sale Products" => "sale-products",
+                    "Recently Viewed" => "recently-viewed",
+                    "Featured Products" => "featured-products",
+                    "SKUs\/IDs" => "sku-id",
+                ),
+                "description" => "Select the order of products you'd like to show.",
+            ),
+            array(
+                "type" => "dropdown",
+                "holder" => "div",
+                "class" => "",
+                "heading" => "Product Category",
+                "param_name" => "product_category",
+                "value" => array(
+                    "Select" => "",
+                    "Best Sellers" => "best-sellers",
+                    "Latest Products" => "latest-products",
+                    "Product Category" => "product-category",
+                    "Top Rated" => "top-rated",
+                    "Sale Products" => "sale-products",
+                    "Recently Viewed" => "recently-viewed",
+                    "Featured Products" => "featured-products",
+                    "SKUs\/IDs" => "sku-id",
+                ),
+                "description" => "Select the product category to filter by.",
+            ),
+            array(
+                "type" => "dropdown",
+                "holder" => "div",
+                "class" => "",
+                "heading" => "Carousel",
+                "param_name" => "carousel",
+                "value" => ["yes", "no"],
+                "description" => "Select if you'd like the asset to be a carousel.",
+            ),
+            array(
+                "type" => "textfield",
+                "holder" => "div",
+                "class" => "",
+                "heading" => "Number of items",
+                "param_name" => "item_perpage",
+                "value" => "12",
+                "description" => "The number of products to show.",
+            ),
+        ),
+    ));
+   // return $shortcodes;
+}
+
+
+/**
+ * Initialise it all
+ */
 add_shortcode('yoforia_products_sc', 'yoforia_products_sc');
 add_action('df_load_frontend_css', 'yoforia_enqueue_carousel_products_sc');
+yoforia_add_vc_shortcodes();
