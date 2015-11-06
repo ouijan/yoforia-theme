@@ -344,8 +344,21 @@ function yoforia_enqueue_carousel_products_sc() {
  * @param  [type] $shortcodes [description]
  * @return [type]             [description]
  */
-function yoforia_add_vc_shortcodes( $shortcodes ) {
+function yoforia_add_vc_shortcodes() {
+    global $wpdb;
     if (!function_exists('vc_map')) return;
+
+    $productCategoryQuery = $wpdb->get_results("SELECT wp_terms.name, wp_terms.slug
+        FROM wp_terms, wp_term_taxonomy
+        WHERE wp_terms.term_id = wp_term_taxonomy.term_id
+        AND wp_term_taxonomy.taxonomy = 'product_cat'");
+
+    $product_categories = array("Select" => "");
+    foreach ($productCategoryQuery as $category) {
+        $product_categories[$category->name] = $category->slug;
+    }
+
+
     vc_map(array(
         'name' => 'Yoforia Products',
         'icon' => 'icon-df_shop-product',
@@ -361,10 +374,10 @@ function yoforia_add_vc_shortcodes( $shortcodes ) {
                 "param_name" => "widths",
                 "value" => array(
                     "Select" => "",
-                    "1\/1" => "1\/1",
-                    "2\/3" => "2\/3",
-                    "1\/2" => "1\/2",
-                    "1\/4" => "1\/4",
+                    "1/1" => "1/1",
+                    "2/3" => "2/3",
+                    "1/2" => "1/2",
+                    "1/4" => "1/4",
                 ),
                 "description" => "This Column it must be the same with row column you create",
             ),
@@ -383,7 +396,7 @@ function yoforia_add_vc_shortcodes( $shortcodes ) {
                     "Sale Products" => "sale-products",
                     "Recently Viewed" => "recently-viewed",
                     "Featured Products" => "featured-products",
-                    "SKUs\/IDs" => "sku-id",
+                    "SKUs/IDs" => "sku-id",
                 ),
                 "description" => "Select the order of products you'd like to show.",
             ),
@@ -393,18 +406,14 @@ function yoforia_add_vc_shortcodes( $shortcodes ) {
                 "class" => "",
                 "heading" => "Product Category",
                 "param_name" => "product_category",
-                "value" => array(
-                    "Select" => "",
-                    "Best Sellers" => "best-sellers",
-                    "Latest Products" => "latest-products",
-                    "Product Category" => "product-category",
-                    "Top Rated" => "top-rated",
-                    "Sale Products" => "sale-products",
-                    "Recently Viewed" => "recently-viewed",
-                    "Featured Products" => "featured-products",
-                    "SKUs\/IDs" => "sku-id",
-                ),
+                "value" => $product_categories,
                 "description" => "Select the product category to filter by.",
+                // "dependency" => array(
+                //     array(
+                //         "element" => "product_type",
+                //         "value" => array(product-category),
+                //     ),
+                // ),
             ),
             array(
                 "type" => "dropdown",
@@ -435,4 +444,4 @@ function yoforia_add_vc_shortcodes( $shortcodes ) {
  */
 add_shortcode('yoforia_products_sc', 'yoforia_products_sc');
 add_action('df_load_frontend_css', 'yoforia_enqueue_carousel_products_sc');
-yoforia_add_vc_shortcodes();
+add_action( 'vc_before_init', 'yoforia_add_vc_shortcodes');
